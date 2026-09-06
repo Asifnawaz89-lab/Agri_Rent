@@ -24,20 +24,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _checkAuthAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 3)); // 3 Sec Splash Delay
+    await Future.delayed(const Duration(seconds: 3));
     
     User? currentUser = _authService.currentUser;
 
     if (!mounted) return;
 
     if (currentUser == null) {
-      // User logged in nahi hai -> Login Screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     } else {
-      // User logged in hai -> Role check karke navigate karein
       String? role = await _authService.getUserRole(currentUser.uid);
       if (!mounted) return;
 
@@ -63,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Custom App Logo Icon Design
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -71,23 +68,22 @@ class _SplashScreenState extends State<SplashScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 15,
                     spreadRadius: 5,
                   ),
                 ],
               ),
               child: const Icon(
-                Icons.agriculture, // Tractor/Farming Icon
+                Icons.agriculture,
                 size: 80,
                 color: AppTheme.primaryGreen,
               ),
             ),
             const SizedBox(height: 24),
 
-            // App Title
             Text(
-              AppStrings.appTitle,
+              AppStrings.get('appName'),
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -97,17 +93,15 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 8),
 
-            // Tagline
             Text(
-              AppStrings.isUrdu ? "ٹریکٹر اور زرعی آلات شیئرنگ ہب" : "Tractor & Farming Equipment Hub",
+              AppStrings.get('tagline'),
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             ),
             const SizedBox(height: 40),
 
-            // Loading Indicator
             const CircularProgressIndicator(color: AppTheme.accentGold),
           ],
         ),

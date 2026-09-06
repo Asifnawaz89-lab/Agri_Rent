@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_strings.dart';
-import '../../core/constants/app_theme.dart';
-import '../../core/services/auth_service.dart';
-import '../home/farmer_home.dart';
-import '../home/owner_home.dart';
-import 'login_screen.dart';
+import 'package:agri_rent/core/constants/app_strings.dart';
+import 'package:agri_rent/core/constants/app_theme.dart';
+import 'package:agri_rent/core/services/auth_service.dart';
+import 'package:agri_rent/screens/auth/login_screen.dart';
+import 'package:agri_rent/screens/home/farmer_home.dart';
+import 'package:agri_rent/screens/home/owner_home.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -22,7 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  String _selectedRole = 'farmer'; // Default role
+  String _selectedRole = 'farmer';
   bool _isLoading = false;
 
   void _handleSignUp() async {
@@ -41,18 +41,17 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (error == null) {
         if (!mounted) return;
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppTheme.primaryGreen,
             content: Text(
-              AppStrings.isUrdu ? "اکاؤنٹ کامیابی سے بن گیا!" : "Account created successfully!",
+              AppStrings.get('accountCreated'),
               style: const TextStyle(color: Colors.white),
             ),
           ),
         );
 
-        // Direct Dashboard Routing based on Selected Role
         if (_selectedRole == 'owner') {
           Navigator.pushReplacement(
             context,
@@ -80,18 +79,16 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.signup),
+        title: Text(AppStrings.get('signUp')),
         actions: [
-          // Urdu / English Language Switcher
-          TextButton.icon(
+          TextButton(
             onPressed: () {
               setState(() {
-                AppStrings.isUrdu = !AppStrings.isUrdu;
+                AppStrings.toggleLanguage();
               });
             },
-            icon: const Icon(Icons.language, color: Colors.white),
-            label: Text(
-              AppStrings.switchLanguage,
+            child: Text(
+              AppStrings.isUrdu ? AppStrings.get('english') : AppStrings.get('urdu'),
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -105,7 +102,6 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Top Header Icon
                 const Icon(
                   Icons.person_add_alt_1_rounded,
                   size: 60,
@@ -114,7 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 10),
 
                 Text(
-                  AppStrings.signup,
+                  AppStrings.get('signUp'),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 24,
@@ -124,54 +120,49 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Full Name Input
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: AppStrings.fullName,
+                    labelText: AppStrings.get('fullName'),
                     prefixIcon: const Icon(Icons.person_outline),
                   ),
-                  validator: (val) => val!.isEmpty ? "Enter full name" : null,
+                  validator: (val) => val!.isEmpty ? AppStrings.get('requiredName') : null,
                 ),
                 const SizedBox(height: 16),
 
-                // Phone Input
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    labelText: AppStrings.phone,
-                    prefixIcon: const Icon(Icons.phone_outlined),
+                  decoration: const InputDecoration(
+                    labelText: "Phone Number",
+                    prefixIcon: Icon(Icons.phone_outlined),
                   ),
-                  validator: (val) => val!.isEmpty ? "Enter phone number" : null,
+                  validator: (val) => val!.isEmpty ? "Enter phone" : null,
                 ),
                 const SizedBox(height: 16),
 
-                // Email Input
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    labelText: AppStrings.email,
+                    labelText: AppStrings.get('email'),
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
-                  validator: (val) => val!.isEmpty ? "Enter valid email" : null,
+                  validator: (val) => val!.isEmpty ? AppStrings.get('requiredEmail') : null,
                 ),
                 const SizedBox(height: 16),
 
-                // Password Input
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: AppStrings.password,
+                    labelText: AppStrings.get('password'),
                     prefixIcon: const Icon(Icons.lock_outline),
                   ),
-                  validator: (val) => val!.length < 6 ? "Password must be 6+ chars" : null,
+                  validator: (val) => val!.length < 6 ? AppStrings.get('requiredPassword') : null,
                 ),
                 const SizedBox(height: 20),
 
-                // Custom Container for Role Selection
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -183,7 +174,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppStrings.selectRole,
+                        AppStrings.get('selectRole'),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -192,37 +183,39 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       const Divider(),
                       RadioListTile<String>(
-                        activeColor: AppTheme.primaryGreen,
-                        title: Text(AppStrings.farmer),
+                        title: Text(AppStrings.get('farmer')),
                         value: 'farmer',
                         groupValue: _selectedRole,
-                        onChanged: (val) => setState(() => _selectedRole = val!),
+                        activeColor: AppTheme.primaryGreen,
+                        onChanged: (val) {
+                          if (val != null) setState(() => _selectedRole = val);
+                        },
                       ),
                       RadioListTile<String>(
-                        activeColor: AppTheme.primaryGreen,
-                        title: Text(AppStrings.owner),
+                        title: Text(AppStrings.get('equipmentOwner')),
                         value: 'owner',
                         groupValue: _selectedRole,
-                        onChanged: (val) => setState(() => _selectedRole = val!),
+                        activeColor: AppTheme.primaryGreen,
+                        onChanged: (val) {
+                          if (val != null) setState(() => _selectedRole = val);
+                        },
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Submit Button
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: _handleSignUp,
                         child: Text(
-                          AppStrings.signup,
+                          AppStrings.get('signUp'),
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                 const SizedBox(height: 12),
 
-                // Login Link
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -230,7 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
-                  child: Text(AppStrings.alreadyHaveAccount),
+                  child: Text(AppStrings.get('alreadyHaveAccount')),
                 ),
               ],
             ),

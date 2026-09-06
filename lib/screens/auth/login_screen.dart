@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_strings.dart';
-import '../../core/constants/app_theme.dart';
-import '../../core/services/auth_service.dart';
-import '../home/farmer_home.dart';
-import '../home/owner_home.dart';
-import 'signup_screen.dart';
+import 'package:agri_rent/core/constants/app_strings.dart';
+import 'package:agri_rent/core/constants/app_theme.dart';
+import 'package:agri_rent/core/services/auth_service.dart';
+import 'package:agri_rent/screens/auth/signup_screen.dart';
+import 'package:agri_rent/screens/home/farmer_home.dart';
+import 'package:agri_rent/screens/home/owner_home.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,14 +39,22 @@ class _LoginScreenState extends State<LoginScreen> {
         if (!mounted) return;
 
         if (role == 'owner') {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OwnerHomeScreen()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const OwnerHomeScreen()),
+          );
         } else {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FarmerHomeScreen()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const FarmerHomeScreen()),
+          );
         }
       } else {
         setState(() => _isLoading = false);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error)),
+        );
       }
     }
   }
@@ -61,66 +70,73 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Top Language Switcher
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton.icon(
-                    onPressed: () => setState(() => AppStrings.isUrdu = !AppStrings.isUrdu),
+                    onPressed: () => setState(() => AppStrings.toggleLanguage()),
                     icon: const Icon(Icons.language, color: AppTheme.primaryGreen),
-                    label: Text(AppStrings.switchLanguage, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    label: Text(
+                      AppStrings.isUrdu ? AppStrings.get('english') : AppStrings.get('urdu'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Header Logo & Text
                 const Icon(Icons.agriculture, size: 70, color: AppTheme.primaryGreen),
                 const SizedBox(height: 12),
                 Text(
-                  AppStrings.appTitle,
+                  AppStrings.get('appName'),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryGreen),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryGreen,
+                  ),
                 ),
                 const SizedBox(height: 30),
 
-                // Email Input
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    labelText: AppStrings.email,
+                    labelText: AppStrings.get('email'),
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
-                  validator: (val) => val!.isEmpty ? "Enter valid email" : null,
+                  validator: (val) => val!.isEmpty ? AppStrings.get('requiredEmail') : null,
                 ),
                 const SizedBox(height: 16),
 
-                // Password Input
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: AppStrings.password,
+                    labelText: AppStrings.get('password'),
                     prefixIcon: const Icon(Icons.lock_outline),
                   ),
-                  validator: (val) => val!.isEmpty ? "Enter password" : null,
+                  validator: (val) => val!.isEmpty ? AppStrings.get('requiredPassword') : null,
                 ),
                 const SizedBox(height: 24),
 
-                // Login Button
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: _handleLogin,
-                        child: Text(AppStrings.login, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          AppStrings.get('login'),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
                 const SizedBox(height: 16),
 
-                // Sign Up Link
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignupScreen()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignupScreen()),
+                    );
                   },
-                  child: Text(AppStrings.dontHaveAccount),
+                  child: Text(AppStrings.get('dontHaveAccount')),
                 ),
               ],
             ),

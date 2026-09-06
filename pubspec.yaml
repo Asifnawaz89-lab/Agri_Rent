@@ -1,33 +1,36 @@
 name: agri_rent
-description: "A peer-to-peer mobile app connecting farmers with equipment owners built using Flutter & Firebase."
+description: AgriRent - Agricultural Equipment Rental Platform
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.12.2
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Firebase Core Packages (Module 1)
+  # Firebase Packages
   firebase_core: ^3.0.0
   firebase_auth: ^5.0.0
   cloud_firestore: ^5.0.0
-
-  # Module 2 Packages (Image Upload, Storage, & Dates)
   firebase_storage: ^12.0.0
-  image_picker: ^1.1.0
-  intl: ^0.19.0
 
+  # Image Selection
+  image_picker: ^1.1.2
+
+  # UI & Fonts
+  google_fonts: ^6.2.1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^6.0.0
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
