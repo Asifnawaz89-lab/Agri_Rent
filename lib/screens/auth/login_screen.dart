@@ -6,7 +6,6 @@ import 'package:agri_rent/screens/auth/signup_screen.dart';
 import 'package:agri_rent/screens/home/farmer_home.dart';
 import 'package:agri_rent/screens/home/owner_home.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -20,15 +19,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   bool _isLoading = false;
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
+      // .trim() removes invisible space issues causing invalid-email
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
       String? error = await _authService.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: email,
+        password: password,
       );
 
       if (error == null) {
@@ -36,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String? role = await _authService.getUserRole(uid);
 
         setState(() => _isLoading = false);
+
         if (!mounted) return;
 
         if (role == 'owner') {
@@ -53,7 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() => _isLoading = false);
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
+          SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(error),
+          ),
         );
       }
     }
@@ -62,40 +70,34 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () => setState(() => AppStrings.toggleLanguage()),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton.icon(
-                    onPressed: () => setState(() => AppStrings.toggleLanguage()),
-                    icon: const Icon(Icons.language, color: AppTheme.primaryGreen),
-                    label: Text(
-                      AppStrings.isUrdu ? AppStrings.get('english') : AppStrings.get('urdu'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                const Icon(Icons.agriculture, size: 70, color: AppTheme.primaryGreen),
-                const SizedBox(height: 12),
-                Text(
-                  AppStrings.get('appName'),
+                const Icon(Icons.agriculture, size: 80, color: AppTheme.primaryGreen),
+                const SizedBox(height: 10),
+                const Text(
+                  "AgriRent",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.primaryGreen,
                   ),
                 ),
                 const SizedBox(height: 30),
-
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -106,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (val) => val!.isEmpty ? AppStrings.get('requiredEmail') : null,
                 ),
                 const SizedBox(height: 16),
-
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
@@ -117,7 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (val) => val!.isEmpty ? AppStrings.get('requiredPassword') : null,
                 ),
                 const SizedBox(height: 24),
-
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
@@ -127,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
-                const SizedBox(height: 16),
-
+                const SizedBox(height: 12),
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(
