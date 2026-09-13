@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:agri_rent/core/constants/app_strings.dart';
-import 'package:agri_rent/core/constants/app_theme.dart';
 import 'package:agri_rent/core/services/auth_service.dart';
 import 'package:agri_rent/screens/auth/login_screen.dart';
 import 'package:agri_rent/screens/home/add_equipment_screen.dart';
+import 'package:agri_rent/screens/home/owner_bookings_screen.dart';
 
 class OwnerHomeScreen extends StatefulWidget {
   const OwnerHomeScreen({super.key});
@@ -22,12 +22,18 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
         title: Text(AppStrings.get('ownerHome')),
         actions: [
           IconButton(
-            icon: const Icon(Icons.language),
+            icon: const Icon(Icons.bookmark_border),
+            tooltip: "Booking Requests",
             onPressed: () {
-              setState(() {
-                AppStrings.toggleLanguage();
-              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const OwnerBookingsScreen()),
+              );
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () => setState(() => AppStrings.toggleLanguage()),
           ),
           IconButton(
             icon: const Icon(Icons.logout),
@@ -42,35 +48,21 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
           ),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text(
-          AppStrings.isUrdu
-              ? "خوش آمدید! اپنی مشینری شامل کرنے کے لیے + پر کلک کریں۔"
-              : "Welcome! Click + to add equipment.",
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.primaryGreen,
-          ),
-          textAlign: TextAlign.center,
+          "Welcome Equipment Owner!",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppTheme.primaryGreen,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddEquipmentScreen()),
           );
         },
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: Text(
-          AppStrings.get('addEquipment'),
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        icon: const Icon(Icons.add),
+        label: Text(AppStrings.get('addEquipment')),
       ),
     );
   }
